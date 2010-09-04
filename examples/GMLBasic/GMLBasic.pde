@@ -16,21 +16,33 @@ void setup() {
   size(400, 300);
   frameRate(24);
   
+  // Init the drawer, with screen size and
+  // how much of this space the tag will take
   drawer = new LineDrawer(width, height, 20, .8f);
+  
+  // Initialize the drawing manager and register the drawer to
+  // receive drawing events (start, points list, end)
   gdm = new GmlDrawingManager();
   gdm.register(drawer, 0);
 
-  gp = new GmlParser(500, "1", this);
+  // Initialize the parser with a sleep time (ms), name and
+  // use "this" for callbacks
+  gp = new GmlParser(500, "myParser", this);
+  // Start the parser (as a thread)
   gp.start();
+  // Request the parsing of a gml file
+  // nb : could be a url as well
   gp.parse(sketchPath+"/19518.gml.xml");
 }
 
 void draw() {
   background(255);
 
+  // Wait until the Gml file is parsed
   if(null == gml) {
     frameCount = 0;
   }
+  // When parsed, draw
   else {
     gdm.pulse(frameCount/frameRate);
     drawer.draw(g, new Vec3D(width/2, height/2, 0));
@@ -60,5 +72,4 @@ public void gmlEvent(GmlEvent event) {
     gdm.setGml(gml);
   }
 }
-
 
