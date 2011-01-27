@@ -1,10 +1,22 @@
 package gml4u.model;
 
+import toxi.geom.Vec3D;
+
 public class GmlConstants {
 
+	// Client
+	public final static String DEFAULT_CLIENT_NAME = "GML4U";
+	public final static String DEFAULT_CLIENT_VERSION = "0.1.0";
+	public final static String DEFAULT_CLIENT_KEYWORDS = "GML4U,Processing";
+	
+	// Environment
+	public final static Vec3D DEFAULT_ENVIRONMENT_UP = new Vec3D(0, -1, 0);
+	
+	// XPath
 	public final static String HEADER_ROOT = "/gml/tag/header";
 	
-	public final static String CLIENT_ROOT = HEADER_ROOT+"/client/child::*"; // child::*
+	// TODO check which of those are used
+	public final static String CLIENT_ROOT = HEADER_ROOT+"/client/child::*";
 	public final static String CLIENT_NAME = CLIENT_ROOT+"/name"; 
 	public final static String CLIENT_VERSION = CLIENT_ROOT+"/version";
 	public final static String CLIENT_USERNAME = CLIENT_ROOT+"/username";
@@ -25,5 +37,9 @@ public class GmlConstants {
 	public final static String ENVIRONMENT_REALSCALE = ENVIRONMENT_ROOT+"/realscale";
 		
 	public final static String ENVIRONMENT_NODES = "/gml/tag/header/environment";
+	
+	// Comon
+	public final static int MODE_CORNER = 1;
+	public final static int MODE_CENTER = 1;
 
 }

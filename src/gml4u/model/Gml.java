@@ -1,48 +1,96 @@
 package gml4u.model;
 
-import gml4u.utils.MappingUtils;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import toxi.geom.AABB;
 import toxi.geom.PointCloud;
+import toxi.geom.Vec2D;
 import toxi.geom.Vec3D;
 
 public class Gml {
 
-	private static final Logger LOGGER = Logger.getLogger("gml4u.model.Gml");
-
+	private static final Logger LOGGER = Logger.getLogger(Gml.class.getName());
 
 	public GmlEnvironment environment;
 	public GmlClient client;
+	private SortedMap<Integer, ArrayList<GmlStroke>> layers = new TreeMap<Integer, ArrayList<GmlStroke>>();
 
-	private float storedDuration = 0;
+	/**
+	 * Creates a new Gml using the given screenBounds
+	 * @param screenBounds - Vec3D
+	 */
+	public Gml(Vec3D screenBounds) {
+		client = new GmlClient();
+		environment = new GmlEnvironment(screenBounds);
+	}
 
-	// Key = layer, ArrayList for strokes
-	public HashMap<Integer, ArrayList<GmlStroke>> layers = new HashMap<Integer, ArrayList<GmlStroke>>();
+	/**
+	 * Creates a new Gml with a default screenBounds x,y,z = 1, 1, 1
+	 */
+	public Gml() {
+		this(new Vec3D(1, 1, 1));
+	}
 
-	public void getInfo() {
-		client.getInfo();
-		LOGGER.log(Level.FINEST, "Nb layers: "+layers.size());
-		// TODO
-		LOGGER.log(Level.FINEST, "Nb strokes: ");
-
-		for (ArrayList<GmlStroke> tmpStrokes : layers.values()) {
-			for (GmlStroke stroke : tmpStrokes) {
-				stroke.getInfo();
-			}
+	/**
+	 * Returns a copy of all strokes
+	 * @return Collection<GmlStroke>
+	 */
+	public Collection<GmlStroke> getStrokes() {
+		Collection<GmlStroke> strokes = new ArrayList<GmlStroke>();
+		Set<Integer> keys = layers.keySet();
+		for (Integer key : keys) {
+			strokes.addAll(getStrokes(key));
 		}
+		return strokes;		
+	}
+
+	/**
+	 * Returns a copy of all strokes for a given layer
+	 * @param layer - int
+	 * @return Collection<GmlStroke>
+	 */
+	public Collection<GmlStroke> getStrokes(int layer) {
+		Collection<GmlStroke> strokes = new ArrayList<GmlStroke>();
+		if (null != layers.get(layer)) {
+			strokes.addAll(layers.get(layer));
+		}
+		return strokes;
+	}
+
+	
+	// TODO getStrokes(float time)
+	
+	// TODO getStrokes(float startTime, float endTime)
+
+	// TODO getFirstPoint()
+
+	// TODO getLastPoint()	
+	
+	// TODO getLastPoint(float time)
+	
+	// TODO getLastPoint(float time)
+	
+	/**
+	 * Returns all layers' Ids
+	 * @return Collection<Integer>
+	 */
+	public Collection<Integer> getLayerIds() {
+		Collection<Integer> keys = new ArrayList<Integer>();
+		keys.addAll(layers.keySet());
+		return keys;
 	}
 
 	/**
 	 * Checks if the given layer exists and adds it if needed 
-	 * @param layer
+	 * @param layer - int
 	 */
-	public void addLayer(int layer) {
+	private void addLayer(int layer) {
 		if (!layers.containsKey(layer)) {
 			ArrayList<GmlStroke> strokeList = new ArrayList<GmlStroke>();
 			layers.put(layer, strokeList);
@@ -50,20 +98,103 @@ public class Gml {
 	}
 
 	/**
-	 * Adds the provided strokes to the appropriate layers
-	 * @param newStrokes
+	 * Adds a new stroke
+	 * @param stroke - GmlStroke
 	 */
-	public void addStrokes(ArrayList<GmlStroke> newStrokes) {
-		for(GmlStroke tmpStroke : newStrokes) {
-			int layer = tmpStroke.brush.layerAbsolute;
+	public void addStroke(GmlStroke stroke) {
+		if (null != stroke && stroke.totalPoints() > 0) { 
+			int layer = stroke.getLayer();
 			addLayer(layer);
-			layers.get(layer).add(tmpStroke);
+			layers.get(layer).add(stroke);
+		}
+		else {
+			LOGGER.warn("Stroke wasn't added. Reason: Null or empty stroke");
 		}
 	}
 
 	/**
-	 * Gets the centroid of the graffiti (includes all strokes)
-	 * @return
+	 * Adds new strokes
+	 * @param strokes - Collection<GmlStroke>
+	 */
+	public void addStrokes(Collection<GmlStroke> strokes) {
+		for(GmlStroke stroke : strokes) {
+			addStroke(stroke);
+		}
+	}
+
+	/**
+	 * Replaces all strokes with new ones
+	 * @param strokes - Collection<GmlStroke>
+	 */
+	public void replaceStrokes(Collection<GmlStroke> strokes) {
+		removeStrokes();
+		addStrokes(strokes);
+	}
+
+	/**
+	 * Removes all strokes from a specific layer
+	 * @param layer - int
+	 */
+	public void removeStrokes(int layer) {
+		layers.remove(layer);
+	}
+
+	/**
+	 * Removes all strokes
+	 */
+	public void removeStrokes() {
+		layers.clear();
+	}
+
+	/**
+	 * Removes the last stroke from a specific layer
+	 * @param layer - int
+	 */
+	public void removeLastStroke(int layer) {
+		try {
+			layers.get(layer).remove(layers.get(layer).size()-1);
+			// Also remove the layer if it doesn't contain any stroke
+			if (layers.get(layer).size() == 0) {
+				layers.remove(layer);
+			}
+		}
+		catch (NullPointerException e) {
+			// Just do nothing
+		}
+	}
+
+	/**
+	 * Gets the bounding rectangle of the Gml (includes all strokes)
+	 * @return Vec2D
+	 */
+	public Vec2D getBoundingRect() {
+		Vec3D boundingBox = getBoundingBox().getExtent().scale(2);
+		return boundingBox.to2DXY();
+	}
+
+	/**
+	 * Gets the bounding box of the Gml (including all strokes);
+	 * @return AABB
+	 */
+	public AABB getBoundingBox() {
+
+		PointCloud pointCloud = new PointCloud();
+		ArrayList<Vec3D> list = new ArrayList<Vec3D>();
+
+		// TODO choose what to return (0 or center) when there is no stroke
+		for (GmlStroke stroke : getStrokes()) {
+			AABB bounds = stroke.getBoundingBox();
+			list.add(bounds.getMin());
+			list.add(bounds.getMax());
+		}
+
+		pointCloud.addAll(list);
+		return pointCloud.getBoundingBox();
+	}
+
+	/**
+	 * Gets the centroid of the Gml (includes all strokes)
+	 * @return Vec3D
 	 */
 	public Vec3D getCentroid() {
 		AABB boundingBox = getBoundingBox();
@@ -71,220 +202,78 @@ public class Gml {
 	}
 
 	/**
-	 * Gets the bounding box of the graffiti (including all strokes);
-	 * @return
+	 * Gets the duration
+	 * @return float 
 	 */
-	public AABB getBoundingBox() {
-		// TODO handle empty stroke map
-
-		PointCloud pointCloud = new PointCloud();
-		ArrayList<Vec3D> list = new ArrayList<Vec3D>();
-
-		for (ArrayList<GmlStroke> tmpStrokes : layers.values()) {
-			for (GmlStroke stroke : tmpStrokes) {
-				AABB bounds = stroke.getBoundingBox();
-				list.add(bounds.getMin());
-				list.add(bounds.getMax());
-			}
-		}
-
-		pointCloud.addAll(list);
-		return pointCloud.getBoundingBox();
-	}
-
-
-	/**
-	 * Calculates the duration
-	 * return float
-	 */
-	private float calculateDuration() {
-
+	public float getDuration() {
 		float duration = 0;
-		for (ArrayList<GmlStroke> tmpStrokes : layers.values()) {
-			for (GmlStroke stroke : tmpStrokes) {
-				float tmpDuration = stroke.duration();
-				if (tmpDuration > duration) duration = tmpDuration;
+		for (GmlStroke stroke : getStrokes()) {
+			float tmpDuration = stroke.getDuration();
+			if (tmpDuration > duration) {
+				duration = tmpDuration;
 			}
 		}
 		return duration;
 	}
 
-
 	/**
-	 * Gets the duration of the graffiti
-	 * @return
-	 */
-	public float getDuration() {
-		// TODO change to storedDuration
-		return calculateDuration();
-	}
-
-
-	// TODO
-	// public void reorient
-
-	/**
-	 * Normalizes the graffiti to fit within 0-1
-	 * Fixes some GML records issues
-	 */
-	public void normalize() {
-		// Reference bounding box
-		AABB refBox = AABB.fromMinMax(new Vec3D(0, 0, 0), new Vec3D(1, 1, 1));
-
-		// Get BoundingBox
-		AABB boundingBox = getBoundingBox();
-		Vec3D min = boundingBox.getMin();
-		Vec3D max = boundingBox.getMax();
-		Vec3D diff = max.sub(min);
-
-		// TODO Does it work if min is not in refBox?
-
-		// If within refBox or bigger than refBox
-		float coef;
-		if(diff.x > diff.y) coef = diff.x;
-		else coef = diff.y;
-
-		for (ArrayList<GmlStroke> tmpStrokes : layers.values()) {
-			for (GmlStroke stroke : tmpStrokes) {
-				for(GmlPoint point: stroke.points) {
-					point.x = (point.x-min.x)/coef;
-					point.y = (point.y-min.y)/coef;
-					point.z = MappingUtils.map(point.z, min.z, max.z, 0, 1);
-					
-					if (point.z != point.z) { // In case of NaN
-						point.z = 0;
-					}
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * Returns the total number of strokes including all layers
+	 * Returns the number of layers
 	 * @return int
 	 */
-	public int nbStrokes() {
-		int nbStrokes = 0;
-
-		for (ArrayList<GmlStroke> tmpStrokes : layers.values()) {
-			nbStrokes += tmpStrokes.size();
-		}
-		return nbStrokes;
+	public int totalLayers() {
+		return layers.size();
 	}
-
 
 	/**
-	 * Returns the total number of strokes in the specified layer
+	 * Returns the total number of strokes
 	 * @return int
 	 */
-	public int nbStrokes(int layer) {
-		return layers.get(layer).size();
+	public int totalStrokes() {
+		return getStrokes().size();
 	}
 
-
+	/**
+	 * Returns the total number of strokes in the given layer
+	 * @return int
+	 */
+	public int totalStrokes(int layer) {
+		return getStrokes(layer).size();
+	}
 
 	/**
 	 * Returns the total number of points including all layers
 	 * @return int
 	 */
-	public int nbPoints() {
+	public int totalPoints() {
 		int totalNbPoints = 0;
 
-		for (ArrayList<GmlStroke> tmpStrokes : layers.values()) {
-			for (GmlStroke stroke : tmpStrokes) {
-				totalNbPoints += stroke.points.size();
-			}
+		for (GmlStroke stroke : getStrokes()) {
+			totalNbPoints += stroke.nbPoints();
 		}
 		return totalNbPoints;
 	}
 
-
 	/**
-	 * Returns the total number of points in the specified layer
+	 * Returns the total number of points in the given layer
 	 * @return int
 	 */
 	public int totalPoints(int layer) {
 		int totalNbPoints = 0;
-		for (GmlStroke stroke : layers.get(layer)) {
-			totalNbPoints += stroke.points.size();
+		for (GmlStroke stroke : getStrokes(layer)) {
+			totalNbPoints += stroke.nbPoints();
 		}
 		return totalNbPoints;
 	}
 
-
 	/**
-	 * Makes the Gml fit into a certain duration.<br>
-	 * If no time information was found, the <i>force</i> parameter tells
-	 * whether the GML points should be left as is or if time should 
-	 * be equally split across all layers, strokes and points.
-	 * If time information is available then it is rescaled to the new
-	 * duration, unless force is true, in which case, the time will be
-	 * equally split across all available layers, strokes and points.
-	 * @param float
+	 * Returns a copy of the Gml
+	 * @return Gml
 	 */
-
-	public void timeBox(float duration, boolean force) {
-
-		float currentDuration = getDuration();
-		// TODO check if no conflict between storedDuration and calculateDuration		
-
-		if (force) {
-			int nbPoints = nbPoints();
-			float step = duration/nbPoints;
-			float currentTime = step;
-
-			// Loop through all layers/strokes/points
-			for (ArrayList<GmlStroke> tmpStrokes : layers.values()) {
-				for (GmlStroke stroke : tmpStrokes) {
-					for(GmlPoint point: stroke.points) {
-						point.time = currentTime;
-						currentTime += step;
-					}
-				}
-			}
-		}
-
-		else if (currentDuration > 0) {
-			for (ArrayList<GmlStroke> tmpStrokes : layers.values()) {
-				for (GmlStroke stroke : tmpStrokes) {
-					for(GmlPoint point: stroke.points) {
-						point.time = MappingUtils.map(point.time, 0, currentDuration, 0, duration);						
-						
-						if(point.time != point.time) {
-							point.time = 0;
-						}
-					}
-				}
-			}
-		}
-		
-		// else leave as is
-
-		storedDuration = currentDuration;
-
-	}
-
-
-	/**
-	 * Gets the nb of layers
-	 * @return
-	 */
-	public int getNbLayers() {
-		return layers.size();
-	}
-
-
-	/**
-	 * Returns the list of named layers
-	 * @return
-	 */
-	public String getLayers() {
-
-		String layerList = "";
-		for (Integer key : layers.keySet()) {
-			layerList +=" "+key;
-		}
-		return layerList;
+	public Gml copy() {
+		Gml newGml = new Gml();
+		newGml.client = this.client;
+		newGml.environment = this.environment;
+		newGml.layers.putAll(this.layers);
+		return newGml;
 	}
 }

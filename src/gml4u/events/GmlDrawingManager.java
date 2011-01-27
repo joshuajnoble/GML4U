@@ -5,146 +5,141 @@ import gml4u.model.GmlPoint;
 import gml4u.model.GmlStroke;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.TreeSet;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 
 
 public class GmlDrawingManager {
 
+	private static final Logger LOGGER = Logger.getLogger(GmlDrawingManager.class.getName());
 
 	private Gml gml;
-	private GmlDrawingEventHandler eventHandler;
-	private boolean start = true;
-	private boolean ended = false;
-
+	private GmlEventHandler eventHandler;
+	private boolean started = false;	
+	private ArrayList<String> stagedStrokesIds;
 
 	/**
-	 * Constructor for the drawing manager
+	 * Creates a new GmlDrawingManager
 	 */
 	public GmlDrawingManager() {
-		this.eventHandler = new GmlDrawingEventHandler();		
+		eventHandler = new GmlEventHandler();
+		stagedStrokesIds = new ArrayList<String>();
 	}
 
 	/**
-	 * Constructor for the drawing manager with a GML object passed as an argument
-	 * @param gml
+	 * Creates a new GmlDrawingManager with the given Gml
+	 * @param gml - Gml
 	 */
-	public GmlDrawingManager(Gml gml) {
-		this.eventHandler = new GmlDrawingEventHandler();		
+	public GmlDrawingManager(final Gml gml) {
+		this();		
 		setGml(gml);
 	}
 
-
 	/**
-	 * Sets the GML object to be used by the drawing manager
+	 * Sets the Gml to be used by the drawing manager
 	 * Resets the drawing manager in the meantime
-	 * @param gml
+	 * @param gml - Gml
 	 */
-	public void setGml(Gml gml) {
+	public void setGml(final Gml gml) {
 		this.gml = gml;
 		reset();
 	}
-
+	
 	/**
-	 * Registers a listener to receive GmlEvents for the given layer
+	 * Registers a listener to receive GmlEvents
 	 * Note: the Object passed must implement a public gmlEvent(GmlEvent event) method
-	 * @param listener
-	 * @param layer
+	 * @param listener - Object
 	 */
-	public void register(Object listener, int layer) {
-		eventHandler.addListener(listener, layer);
+	public void register(final Object listener) {
+		eventHandler.addListener(listener);
 	}
-
+	
 	/**
-	 * Unregisters a listener from the given layer
-	 * @param listener
-	 * @param layer
+	 * Unregisters a listener
+	 * @param listener - Object 
 	 */
-	public void unregister(Object listener, int layer) {
-		eventHandler.removeListener(listener, layer);
-	}
-
-	/**
-	 * Returns the number of layers in the current GML file
-	 * @return
-	 */
-	public int getNbLayers() {
-		return gml.getNbLayers();
+	public void unregister(final Object listener) {
+		eventHandler.removeListener(listener);
 	}
 
 	/**
 	 * Resets the drawing manager
+	 * Clears the staged strokes list and sets drawing's started status to false
 	 */
 	public void reset() {
-		start = true;
-		ended = false;
+		started = false;
+		stagedStrokesIds.clear();
 	}
-
+	
 	/**
-	 * Filters a linked list of points to only keep the points drawn up to the given time  
-	 * @param source
-	 * @param time
-	 * @return
-	 */
-	private LinkedList<GmlPoint> getPoints(LinkedList<GmlPoint> source, float time) {
-		LinkedList<GmlPoint> points = new LinkedList<GmlPoint>();
-		Iterator<GmlPoint> i = source.iterator();
-
-		while(i.hasNext()) {
-			GmlPoint point = i.next();
-			if (point.time <= time) {
-				points.add(point);
-			}
-			else {
-				//points.add(point);
-				return points;
-			}
-		}
-		return points;
-	}
-
-	/**
-	 * Pulses the drawing manager which will sent the matching GmlEvents to its
-	 * listeners (start, drawing info, stop) in return.
-	 * @param time
+	 * Pulses the drawing manager which will send the matching GmlEvents to its
+	 * listeners (start, drawing, stroke start, stroke end, stop) in return.
+	 * @param time - float
 	 */
 	public void pulse(float time) {
+		pulse(Float.MIN_VALUE, time);
+	}
+	
+	/**
+	 * Pulses the drawing manager which will send the matching GmlEvents to its
+	 * listeners (start, drawing, stroke start, stroke end, stop) in return.
+	 * @param timeMin - float beginning of interval
+	 * @param timeMax - float end of interval
+	 */
+	public void pulse(float timeMin, float timeMax) {
 
-		if (null != gml) {
-			if(start) {
-				GmlDrawingStart event = new GmlDrawingStart(gml.environment, gml.getCentroid());
+		if (timeMin > timeMax) {
+			LOGGER.warn("Interval error, doing noting. Reason: start time must be lower than end time");
+		}
+		
+		else if (null != gml) {
+			
+			// Checks if drawing started
+			if (!started) {
+				LOGGER.debug("Drawing start");
+				// Fire new GmlDrawingStartEvent
+				GmlDrawingStartEvent event = new GmlDrawingStartEvent(gml);
 				eventHandler.fireNewEvent(event);
-				start = false;
-				ended = false; // useless?
+				started = true;
 			}
-
-			// Get registered (and sorted) layers list
-			TreeSet<Integer> layerSet = new TreeSet<Integer>();
-			layerSet.addAll(eventHandler.getLayersWithListeners());
-
-			// Loop through each layer
-			for (Integer layer: layerSet) {
-
-				ArrayList<GmlStroke> strokes = new ArrayList<GmlStroke>();
-				strokes = gml.layers.get(layer);
-
-				if (null != strokes) {
-					for (int i=0; i<strokes.size(); i++) {
-						GmlStroke stroke = strokes.get(i);
-						LinkedList<GmlPoint> points = getPoints(stroke.points, time);
-						
-						if (points.size() > 0) {
-							GmlDrawingEvent event = new GmlDrawingEvent(layer, i, points);
-							eventHandler.fireNewEvent(event);
-						}
-					}
+			
+			// TODO scan first and then send event afterward
+			for (GmlStroke stroke : gml.getStrokes()) {
+				
+				// Checks if stroke is new
+				if (!stagedStrokesIds.contains(stroke.getID())) {
+					LOGGER.debug("Stroke start");
+					// fire new GmlStrokeStartEvent
+					GmlStrokeStartEvent event = new GmlStrokeStartEvent(stroke);
+					eventHandler.fireNewEvent(event);
+					// set as staged stroke
+					stagedStrokesIds.add(stroke.getID());
 				}
-			}
-
-			if (time > gml.getDuration() && !ended) {
-				ended = true;
-				GmlDrawingEnd event = new GmlDrawingEnd();
+				
+				// Get the list of points for every stroke
+				List<GmlPoint> points = stroke.getPoints(timeMin, timeMax);
+				// Checks if it contains points
+				if (points.size() > 0) {
+					// Fire new GmlDrawingEvent
+					GmlDrawingEvent event = new GmlDrawingEvent(stroke, timeMin, timeMax);
+					eventHandler.fireNewEvent(event);
+				}
+				
+				// Checks if stroke still has points to draw
+				if (stroke.nbPoints() == points.size()) {
+					LOGGER.debug("Stroke end");
+					// Fire new GmlStrokeEndEvent
+					GmlStrokeEndEvent event = new GmlStrokeEndEvent(stroke);
+					eventHandler.fireNewEvent(event);
+				}
+			}			
+			
+			// Checks if drawing ended
+			if (timeMax > gml.getDuration()) {
+				LOGGER.debug("Drawing end");
+				// Fire new GmlDrawingEndEvent
+				GmlDrawingEndEvent event = new GmlDrawingEndEvent();
 				eventHandler.fireNewEvent(event);
 			}
 		}

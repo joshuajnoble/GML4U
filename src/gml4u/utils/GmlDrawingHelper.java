@@ -1,23 +1,23 @@
 package gml4u.utils;
 
-import gml4u.model.GmlEnvironment;
+import org.apache.log4j.Logger;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import gml4u.model.GmlEnvironment;
 
 import toxi.geom.Vec3D;
 
 public class GmlDrawingHelper {
 
-	private static final Logger LOGGER = Logger.getLogger("gml4u.utils.GmlDrawingHelper");
-
+	// TODO remove GmlDrawingHelper
 	
+	private static final Logger LOGGER = Logger.getLogger(GmlDrawingHelper.class.getName());
+
 	/**
 	 * Returns the best graff scale, based on screen dimensions and ratio 
-	 * @param screen
-	 * @param environment
-	 * @param screenGraffRatio
-	 * @return
+	 * @param screen - Vec3D vector
+	 * @param environment - GmlEnvironment
+	 * @param screenGraffRatio - float
+	 * @return Vec3D
 	 */
 	public static Vec3D getGraffScale(Vec3D screen, GmlEnvironment environment, float screenGraffRatio) {
 
@@ -29,11 +29,13 @@ public class GmlDrawingHelper {
 		Vec3D screenBounds = environment.screenBounds;
 		
 		float screenRatio = screen.x/screen.y;
+		LOGGER.debug("screen ratio: "+screenRatio);
 		
 		// Remap the graff to the screen
 		if (Math.abs(up.x) == 1) {
 			// Get the graff ratio based on its original screen size
 			float graffRatio = screenBounds.y/screenBounds.x;
+
 
 			// Same orientation
 			if((graffRatio >= 1 && screenRatio >= 1) || (graffRatio < 1 && screenRatio < 1)) {
@@ -95,9 +97,6 @@ public class GmlDrawingHelper {
 		else  if (Math.abs(up.z) == 1) {
 			// TODO
 		}
-
 		return graffScale;
-
 	}
-
 }

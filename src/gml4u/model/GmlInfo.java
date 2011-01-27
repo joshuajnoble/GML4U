@@ -1,38 +1,28 @@
 package gml4u.model;
 
-import java.util.HashMap;
-import java.util.Set;
+import java.util.Map;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public class GmlInfo extends GmlGenericContainer {
 
-public class GmlInfo {
+	//private static final Logger LOGGER = Logger.getLogger(GmlInfo.class.getName());
 
-	private static final Logger LOGGER = Logger.getLogger("gml4u.model.GmlInfo");
+	/**
+	 * A list of known parameters to be used with setters and getters
+	 */	
+	// public static final String XXX = "";
 	
-	public HashMap<String, String> map;
-	
+	/**
+	 * Creates a new GmlInfo
+	 */
 	public GmlInfo() {
-		map = new HashMap<String, String>();
 	}
 	
-	public float getFloat(String key) {
-		return Float.parseFloat(map.get(key));
-	}
-	
-	public int getInt(String key) {
-		return Integer.parseInt(map.get(key));
-	}
-	
-	public String getString(String key) {
-		return map.get(key);
-	}
-	
-	
-	public void getInfo() {
-		Set<String> keys = map.keySet();
-		for (String key: keys) {
-			LOGGER.log(Level.FINEST, key+": "+map.get(key));
-		}
+	/**
+	 * Creates a new GmlInfo using the given parameters key/value map
+	 * @param map - Map<String, Object>
+	 */
+	public GmlInfo(Map<String, Object> map) {
+		this();
+		setParameters(map);
 	}
 }

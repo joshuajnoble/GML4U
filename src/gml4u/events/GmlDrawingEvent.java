@@ -1,20 +1,22 @@
 package gml4u.events;
 
-import gml4u.model.GmlPoint;
-
-import java.util.LinkedList;
-
-
+import gml4u.model.GmlStroke;
 
 public class GmlDrawingEvent extends GmlEvent {
 
-	public int layer;
-	public int strokeId;
-	public LinkedList<GmlPoint> points;
+	public GmlStroke stroke;
+	public float timeMin;
+	public float timeMax;
 	
-	public GmlDrawingEvent(int layer, int strokeId, LinkedList<GmlPoint> points) {
-		this.layer = layer;
-		this.strokeId = strokeId;
-		this.points = points;
+	/**
+	 * Creates a new GmlDrawingEvent with the given stroke and time interval
+	 * @param stroke
+	 * @param timeMin
+	 * @param timeMax
+	 */
+	public GmlDrawingEvent(final GmlStroke stroke, final float timeMin, final float timeMax) {
+		this.stroke = stroke;
+		this.timeMin = timeMin;
+		this.timeMax = timeMax;
 	}
 }

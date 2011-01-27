@@ -195,8 +195,8 @@ private void showHelp() {
 public void gmlEvent(GmlEvent event) {
   if (event instanceof GmlParsingEvent && null != ((GmlParsingEvent) event).gml) {
     nextGml = ((GmlParsingEvent) event).gml;
-    nextGml.timeBox(15.f, true);
-    nextGml.normalize();
+    GmlUtils.timeBox(nextGml, 15.f, true);
+    GmlUtils.normalize(nextGml);
     if (!autoMode || (autoMode && null == currentGml)) {
       loadNext();
     }
