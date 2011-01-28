@@ -120,16 +120,17 @@ ${line}
 			<classpath>
 				<path refid="classpath"/>
 			</classpath>
-			<exclude name="**/*Test*.java"/>
 		</javac>
+		<!-- UNUSED
 		<copy todir="${project.bin.data}">
 			<fileset dir="${project.data}" excludes="README" />
 		</copy>
+		-->
 	</target>
 	
 	
 	<target name="generate.jar">
-		<jar jarfile="${project.tmp}/${project.name}/${folder}/${project.jar.name}" basedir="${project.bin}"/>
+		<jar jarfile="${project.tmp}/${project.name}/${folder}/${project.jar.name}" excludes="*.jar" basedir="${project.bin}"/>
 	</target>
 	
 	
@@ -141,16 +142,21 @@ ${line}
   		<mkdir dir="${project.tmp}/${project.name}/examples" />
 	  	<mkdir dir="${project.tmp}/${project.name}/reference" />
   		<mkdir dir="${project.tmp}/${project.name}/src" />
+		<!-- Copy examples -->
   		<copy todir="${project.tmp}/${project.name}/examples">
   			<fileset dir="${project.examples}">
 	  			<exclude name="**/*README*"/>
   			</fileset>
 	  	</copy>
+		<!-- Copy sources without unit tests files -->
   		<copy todir="${project.tmp}/${project.name}/src">
-  			<fileset dir="${project.src}"/>
+  			<fileset dir="${project.src}">
+  				<exclude name="**/*test*/**"/>
+  			</fileset>
 	  	</copy>
-	  	<copy todir="${project.tmp}/${project.name}/${folder}">
-  			<fileset dir="${project.lib}" excludes="README" />
+		<!-- Copy libs -->
+		<copy todir="${project.tmp}/${project.name}/${folder}">
+  			<fileset dir="${project.lib}" excludes="README, core.jar" />
 	  	</copy>
 	</target>
 	
@@ -293,7 +299,8 @@ ${line}
 	
 	
 	
-	<target name="generate.install.library" if="is.normal">	
+	<target name="generate.install.library" if="is.normal">
+		<!-- Replace placehodlers in the install.txt file -->
 		<copy file="${install.source}" tofile="${project.dist.version}/INSTALL.txt" />
 		<replaceregexp file="${install.destination}" match="##name##" replace="${project.name}" flags="g" />
 		<replaceregexp file="${install.destination}" match="##folder##" replace="libraries" flags="g" />
@@ -305,20 +312,20 @@ ${line}
   		<move todir="${project.dist.version}/tmp/${project.name}-${project.version}/${project.name}">
   			<fileset dir="${project.dist.version}/${project.name}" />
   		</move> 
-  		
+  		<!-- Install.txt -->
   		<move file="${install.destination}" tofile="${project.dist.version}/tmp/${project.name}-${project.version}/INSTALL.txt" />
 	  	<zip destfile="${project.dist.version}/${project.name}-${project.version}.zip"
   	       basedir="${project.dist.version}/tmp/${project.name}-${project.version}"
   	       excludes="**/.DS_Store"
 		/>
+		<!-- Move the zipped version of the library to download folder -->
 		<move file="${project.dist.version}/${project.name}-${project.version}.zip" todir="${project.dist.version}/web/download" />
 		<move todir="${project.dist.version}">
 			<fileset dir="${project.dist.version}/web" />
 		</move>
+		<!-- Delete tmp folder and content -->
 		<delete dir="${project.dist.version}/tmp" />
 	</target>
-	
-	
 	
 	
 	<target name="versionSourcefile">
@@ -352,7 +359,7 @@ ${line}
 	
 	
 	<target name="clean" depends="library.run">
-		<!-- <delete dir="${project.bin}"/> -->
+		<delete dir="${project.bin}"/>
 		<delete dir="${project.tmp}"/>
 		<echo>
 		
