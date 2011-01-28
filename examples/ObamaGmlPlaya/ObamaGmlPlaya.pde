@@ -14,7 +14,10 @@
 
 --------------------------------------------------------------------- */
 
+// Currently broken due to major changes in version 0.1.0
+// Will try to fix that soon
 
+/*
 import gml4u.utils.*;
 import gml4u.events.*;
 import gml4u.model.exceptions.*;
@@ -578,4 +581,4 @@ public class ObamaDrawer {
 		//}
 	}
 }
-
+*/
