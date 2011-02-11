@@ -60,7 +60,7 @@ public class GmlBrushManager {
 	 * Init with default styles and sets defaultStyle
 	 */
 	private void init() {
-		drawers.put(DEFAULT, new BoxesDemo());
+		drawers.put(DEFAULT, new CurvesDemo());
 		
 		drawers.put(BRUSH_MESH0000, new MeshDemo());
 		drawers.put(BRUSH_CURVES0000, new CurvesDemo());
