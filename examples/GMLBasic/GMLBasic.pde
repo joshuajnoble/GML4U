@@ -4,7 +4,7 @@ import gml4u.utils.*;
 import gml4u.model.*;
 
 Gml gml;
-GmlBrushManager brushes = new GmlBrushManager();
+GmlBrushManager brushManager = new GmlBrushManager();
 
 void setup() {
   size(600, 400, P3D);
@@ -12,5 +12,5 @@ void setup() {
 }
 
 void draw() {
-    brushes.draw(g, gml, 600);
+    brushManager.draw(g, gml, 600);
 }

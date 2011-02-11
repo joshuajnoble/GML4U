@@ -14,7 +14,6 @@ float scale;
 GmlRecorder recorder;
 GmlParser parser;
 GmlSaver saver;
-GmlBrushManager brushes = new GmlBrushManager();
 GmlBrushManager brushManager;
 
 void setup() {

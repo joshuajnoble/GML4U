@@ -32,7 +32,6 @@ float gmlScale;
 GmlRecorder recorder;
 GmlParser parser;
 GmlSaver saver;
-GmlBrushManager brushes;
 GmlBrushManager brushManager;
 Vec3D screen;
 
