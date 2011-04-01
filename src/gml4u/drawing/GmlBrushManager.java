@@ -114,7 +114,7 @@ public class GmlBrushManager {
 	 * @return String
 	 */
 	public String getID(int index) {
-		if (index < 0 || index > drawers.size()-2) {
+		if (index < 0 || index > drawers.size()-1) {
 			LOGGER.warn("Drawer not found, returning default");
 			return DEFAULT;
 		}
