@@ -11,8 +11,7 @@ public class CurvesDemo extends GmlStrokeDrawer {
 	public void draw(PGraphics g, GmlStroke stroke, float scale, float minTime, float maxTime) {
 			
 		g.pushStyle();
-		g.strokeWeight(5);
-		g.stroke(200);
+		g.strokeWeight(10);
 		g.noFill();
 		g.beginShape();
 		for (GmlPoint point : stroke.getPoints()) {
