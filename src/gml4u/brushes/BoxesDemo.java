@@ -14,11 +14,7 @@ public class BoxesDemo extends GmlStrokeDrawer {
 			
 		GmlPoint prev = new GmlPoint();
 		GmlPoint cur = new GmlPoint();
-		
-		g.pushStyle();
-		
-		g.fill(255, 100);
-		
+						
 		for (GmlPoint point: stroke.getPoints()) {
 			if (point.time < minTime) continue;
 			if (point.time > maxTime) break;
@@ -34,7 +30,5 @@ public class BoxesDemo extends GmlStrokeDrawer {
 			g.popMatrix();
 			prev.set(cur);
 		}
-		
-		g.popStyle();
 	}
 }
