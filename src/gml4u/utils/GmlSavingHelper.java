@@ -69,8 +69,9 @@ public class GmlSavingHelper {
 	 * Saves a Gml file to the given location (path + filename)
 	 * @param gml - Gml
 	 * @param location - String
+	 * @return boolean
 	 */
-	public static void save(final Gml gml, final String location) {
+	public static boolean save(final Gml gml, final String location) {
 
 		// TODO choose which version to save into and create a factory
 		
@@ -79,6 +80,7 @@ public class GmlSavingHelper {
 		try {
 			Document document = createDocument(gml);
 			XmlUtils.saveDocument(document, location);
+			return true;
 		}
 		catch (IOException e) {
 			LOGGER.error("Saving failed. Reason: "+ e.getMessage());
@@ -86,6 +88,7 @@ public class GmlSavingHelper {
 		catch (ParserConfigurationException e) {
 			LOGGER.error("Saving failed. Reason: parsing issue, "+ e.getMessage());
 		}
+		return false;
 	}
 
 	/**

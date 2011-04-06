@@ -60,14 +60,14 @@ public class GmlSaver extends Thread {
 				if (null != gml && !location.equals("")) {
 
 					LOGGER.debug("Start saving: "+location);
-					GmlSavingHelper.save(gml, location);
+					boolean successful = GmlSavingHelper.save(gml, location);
 					
 					LOGGER.debug("Finished saving");
 					if (callback != null) {
 						try {
 							// Call the method with this object as the argument!
 							LOGGER.debug("Invoking callback");
-							callback.invoke(parent, new GmlSavingEvent(location) );
+							callback.invoke(parent, new GmlSavingEvent(location, successful) );
 						}
 						catch (Exception e) {
 							LOGGER.warn("I couldn't invoke that method for some reason. "+e.getMessage());

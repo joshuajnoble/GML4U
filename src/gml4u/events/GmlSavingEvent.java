@@ -3,13 +3,14 @@ package gml4u.events;
 public class GmlSavingEvent extends GmlEvent {
 	
 	public String location;
+	public boolean successful;
 	
 	/**
 	 * Creates a new GmlSavingEvent using the given location
 	 * @param location - String
 	 */
-	public GmlSavingEvent(String location) {
-		// TODO success/fail info
+	public GmlSavingEvent(String location, boolean successful) {
 		this.location = location;
+		this.successful = successful;
 	}
 }
