@@ -8,6 +8,7 @@ public class GmlSavingEvent extends GmlEvent {
 	/**
 	 * Creates a new GmlSavingEvent using the given location
 	 * @param location - String
+	 * @param successful - boolean
 	 */
 	public GmlSavingEvent(String location, boolean successful) {
 		this.location = location;
