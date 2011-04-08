@@ -109,6 +109,19 @@ public class GmlBrushManager {
 	}
 	
 	/**
+	 * Gets a drawer from its name
+	 * @param name - String
+	 * @return GmlStrokeDrawer
+	 */
+	public GmlStrokeDrawer get(String name) {
+		if (null == drawers.get(name)) {
+			LOGGER.warn("Style not found, returning default");
+			return drawers.get(DEFAULT);
+		}
+		return drawers.get(name);
+	}
+	
+	/**
 	 * Gets a drawer id from its index
 	 * @param index - int
 	 * @return String
