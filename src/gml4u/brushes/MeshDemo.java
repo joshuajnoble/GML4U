@@ -1,5 +1,7 @@
 package gml4u.brushes;
 
+import java.util.Iterator;
+
 import gml4u.drawing.GmlStrokeDrawer;
 import gml4u.model.GmlPoint;
 import gml4u.model.GmlStroke;
@@ -9,6 +11,7 @@ import processing.core.PGraphics;
 import toxi.geom.Vec3D;
 import toxi.geom.mesh.Face;
 import toxi.geom.mesh.TriangleMesh;
+
 
 public class MeshDemo extends GmlStrokeDrawer {
 
@@ -25,7 +28,9 @@ public class MeshDemo extends GmlStrokeDrawer {
 
 		g.beginShape(PConstants.TRIANGLES);
 		// iterate over all faces/triangles of the mesh
-		for(Face f : mesh.faces) {
+		//for(Face f : mesh.faces) {
+		for(Iterator i=mesh.faces.iterator(); i.hasNext();) {
+			Face f=(Face)i.next();
 			g.vertex(f.a.x, f.a.y, f.a.z);
 			g.vertex(f.b.x, f.b.y, f.b.z);
 			g.vertex(f.c.x, f.c.y, f.c.z);
