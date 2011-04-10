@@ -32,6 +32,14 @@ public class GmlDrawingManager {
 		eventHandler = new GmlEventHandler();
 		stagedStrokesIds = new ArrayList<String>();
 	}
+	
+	/**
+	 * Creates a new GmlDrawingManager and register for callback in the meantime
+	 */
+	public GmlDrawingManager(Object o) {
+		this();
+		register(o);
+	}
 
 	/**
 	 * Creates a new GmlDrawingManager with the given Gml
