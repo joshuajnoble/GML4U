@@ -18,6 +18,8 @@
 // Will try to fix that soon
 
 /*
+import org.apache.log4j.PropertyConfigurator;
+
 import gml4u.utils.*;
 import gml4u.events.*;
 import gml4u.model.exceptions.*;
@@ -58,6 +60,7 @@ PImage wallImg, obamaFrontImage, obamaFrontMask, obamaShadow, obamaArmImage, oba
 
 void setup() {
   size(1024, 683);
+  PropertyConfigurator.configure(sketchPath+"/log4j.properties");
 
   frameRate(24);
   cursor(CROSS);

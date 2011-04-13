@@ -1,3 +1,5 @@
+import org.apache.log4j.PropertyConfigurator;
+
 import gml4u.drawing.GmlBrushManager;
 import gml4u.events.GmlEvent;
 import gml4u.events.GmlParsingEvent;
@@ -18,6 +20,7 @@ GmlBrushManager brushManager;
 
 void setup() {
   size(800, 600, P3D);
+  PropertyConfigurator.configure(sketchPath+"/log4j.properties");
 
   // The recording area
   Vec3D screen = new Vec3D(width, height, 0);

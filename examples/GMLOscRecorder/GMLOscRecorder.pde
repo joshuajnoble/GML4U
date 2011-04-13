@@ -12,6 +12,8 @@
 * http://hexler.net/touchosc
 */
 
+import org.apache.log4j.PropertyConfigurator;
+
 import processing.opengl.*;
 
 import oscP5.*;
@@ -43,6 +45,7 @@ boolean isRecording;
 
 void setup() {
   size(800, 600, OPENGL);
+  PropertyConfigurator.configure(sketchPath+"/log4j.properties");
 
   // OSC Client, listening on port 3333
   oscP5 = new OscP5(this, 3333);
