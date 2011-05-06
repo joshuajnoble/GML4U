@@ -104,6 +104,21 @@ public class GmlStroke {
 	}
 	
 	/**
+	 * Returns the stroke's start time (first point's time info)
+	 * @return float
+	 */
+	public float getStartTime() {
+		if (points.size() > 0) {
+			return points.get(0).time;
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	
+	
+	/**
 	 * Returns the number of points in the stroke
 	 * @return int
 	 */

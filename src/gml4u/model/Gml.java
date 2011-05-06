@@ -216,6 +216,25 @@ public class Gml {
 		return duration;
 	}
 
+
+	/**
+	 * Gets the start time of the drawing
+	 * @return float 
+	 */
+	public float getStartTime() {
+		float start = Float.MAX_VALUE;
+		for (GmlStroke stroke : getStrokes()) {
+			float tmpStart = stroke.getStartTime();
+			if (tmpStart < start) {
+				start = tmpStart;
+			}
+		}
+		if (start == Float.MAX_VALUE) {
+			start = 0;
+		}
+		return start;
+	}
+	
 	/**
 	 * Returns the number of layers
 	 * @return int
