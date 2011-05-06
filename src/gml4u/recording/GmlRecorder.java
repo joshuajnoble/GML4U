@@ -21,7 +21,7 @@ public class GmlRecorder {
 	
 	private static final Logger LOGGER = Logger.getLogger(GmlRecorder.class.getName());
 	
-	public static final int DEFAULT_MIN_STROKE_LENGTH = 20;
+	public static final float DEFAULT_MIN_STROKE_LENGTH = 0.01f;
 	public static final float DEFAULT_MIN_POINTS_DISTANCE = 0.001f;
 
 	private Gml gml;
