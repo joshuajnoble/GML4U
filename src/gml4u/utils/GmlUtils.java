@@ -244,13 +244,13 @@ public class GmlUtils {
 		// Do a mapping between the original duration and the new one
 		// by keeping the interval ratio between each point.
 		else if (currentDuration > 0) {
-			
+			float startTime = gml.getStartTime();
 			// Loop through all layers/strokes/points
 			List<GmlStroke> strokes = (List<GmlStroke>) gml.getStrokes();
 			for (GmlStroke stroke : strokes) {
 				List<GmlPoint> points = stroke.getPoints();
 				for(GmlPoint point: points) {
-					point.time = MappingUtils.map(point.time, 0, currentDuration, 0, duration);						
+					point.time = MappingUtils.map(point.time, startTime, currentDuration, 0, duration);						
 
 					if(point.time != point.time) {
 						point.time = 0;
