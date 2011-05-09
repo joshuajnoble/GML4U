@@ -250,7 +250,7 @@ public class GmlUtils {
 			for (GmlStroke stroke : strokes) {
 				List<GmlPoint> points = stroke.getPoints();
 				for(GmlPoint point: points) {
-					point.time = MappingUtils.map(point.time, startTime, currentDuration, 0, duration);						
+					point.time = MappingUtils.map(point.time, startTime, currentDuration, 0.000000001f, duration);						
 
 					if(point.time != point.time) {
 						point.time = 0;
