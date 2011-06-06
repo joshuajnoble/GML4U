@@ -4,6 +4,7 @@ import gml4u.drawing.GmlBrushManager;
 
 import java.util.Map;
 
+
 import org.apache.log4j.Logger;
 
 public class GmlBrush extends GmlGenericContainer {
@@ -48,6 +49,7 @@ public class GmlBrush extends GmlGenericContainer {
 	 */
 	private void checkMandatoryParameters() {
 		if (null == get(GmlBrush.UNIQUE_STYLE_ID) || "".equals(get(GmlBrush.UNIQUE_STYLE_ID))) {
+			LOGGER.debug("No brush defined, using default Brush instead");
 			set(GmlBrush.UNIQUE_STYLE_ID, GmlBrushManager.BRUSH_DEFAULT);
 		}
 	}

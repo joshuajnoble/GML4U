@@ -104,6 +104,34 @@ public class GmlRecorder {
 	 * Note: you must keep track of the sessionID and use the same ID to end the stroke<br/>
 	 * otherwise the stroke won't be added to the gml.
 	 * @param sessionID - int
+	 */
+	public void beginStroke(int sessionID) {
+
+		GmlBrush brush = new GmlBrush();
+		int layer = 0;
+		beginStroke(sessionID, layer, brush);
+	}
+
+	/**
+	 * Begins the recording of a new GmlStroke<br/>
+	 * Note: you must keep track of the sessionID and use the same ID to end the stroke<br/>
+	 * otherwise the stroke won't be added to the gml.
+	 * @param sessionID - int
+	 * @param layer - int
+	 */
+	public void beginStroke(int sessionID, int layer) {
+
+		GmlBrush brush = new GmlBrush();
+		beginStroke(sessionID, layer, brush);
+	}
+
+
+	/**
+	 * Begins the recording of a new GmlStroke<br/>
+	 * Note: you must keep track of the sessionID and use the same ID to end the stroke<br/>
+	 * otherwise the stroke won't be added to the gml.
+	 * @param sessionID - int
+	 * @param layer - int
 	 * @param brush - GmlBrush
 	 */
 	public void beginStroke(int sessionID, int layer, final GmlBrush brush) {
