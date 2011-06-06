@@ -149,6 +149,17 @@ public class GmlRecorder {
 	 * They'll be scaled automatically according to the screen's ratio
 	 * @param sessionID - int
 	 * @param v - Vec3D vetor (shall be within AABB (0,0,0) -> (1,1,1))
+	 */
+	public void addPoint(int sessionID, Vec3D v) {
+		addPoint(sessionID, v, 0);
+	}
+	
+	/**
+	 * Adds a new point to a stroke
+	 * The point's coordinates shall be within 0-1 on every axis.
+	 * They'll be scaled automatically according to the screen's ratio
+	 * @param sessionID - int
+	 * @param v - Vec3D vetor (shall be within AABB (0,0,0) -> (1,1,1))
 	 * @param time - float
 	 */
 	public void addPoint(int sessionID, Vec3D v, final float time) {
