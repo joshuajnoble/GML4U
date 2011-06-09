@@ -223,6 +223,21 @@ public class GmlRecorder {
 	}
 
 	/**
+	 * Ends recording of all GmlStroke
+	 */
+	public void endStrokes() {
+		LOGGER.debug("Stop recording");
+		for (int sessionID : strokes.keySet()) {
+			GmlStroke stroke = strokes.get(sessionID);
+			// Add the stroke only if significant (at least a certain length)
+			if (null != stroke && stroke.getLength() > minStrokeLength) {
+				gml.addStroke(stroke);
+			}			
+		}
+		strokes.clear();
+	}
+
+	/**
 	 * Removes the last GmlStroke from the given layer
 	 * @param layer
 	 */
