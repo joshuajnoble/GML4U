@@ -261,4 +261,7 @@ public class GmlUtils {
 			gml.replaceStrokes(strokes);
 		}
 	}
+	
+	// TODO stats() get all info about the drawing
+	
 }
