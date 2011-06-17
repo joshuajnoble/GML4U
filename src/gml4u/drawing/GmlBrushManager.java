@@ -78,6 +78,19 @@ public class GmlBrushManager {
 	}
 	
 	/**
+	 * Sets the default stroke drawer based on his styleID
+	 * @param styleId - String
+	 */
+	public void setDefault(String styleId) {
+		if (drawers.containsKey(styleId)) {
+			drawers.put(DEFAULT, drawers.get(styleId));
+		}
+		else {
+			LOGGER.warn("Style not found, default brush wasn't changed");
+		}
+	}
+
+	/**
 	 * Gets all drawers' Ids as a Collection
 	 * @return Collection<String>
 	 */
@@ -113,12 +126,12 @@ public class GmlBrushManager {
 	 * @param name - String
 	 * @return GmlStrokeDrawer
 	 */
-	public GmlStrokeDrawer get(String name) {
-		if (null == drawers.get(name)) {
+	public GmlStrokeDrawer get(String styleId) {
+		if (null == drawers.get(styleId)) {
 			LOGGER.warn("Style not found, returning default");
 			return drawers.get(DEFAULT);
 		}
-		return drawers.get(name);
+		return drawers.get(styleId);
 	}
 	
 	/**
@@ -142,6 +155,19 @@ public class GmlBrushManager {
 	 */
 	public void add(String id, GmlStrokeDrawer drawer) {
 		drawers.put(id, drawer);
+	}
+	
+	/**
+	 * Removes a stroke drawer
+	 * @param styleId - String
+	 */
+	public void remove(String styleId) {
+		if (drawers.containsKey(styleId)) {
+			drawers.remove(styleId);
+		}
+		else {
+			LOGGER.warn(styleId + " style wasn't removed (not found)");
+		}
 	}
 	
 	/**
