@@ -177,7 +177,7 @@ public class GmlBrushManager {
 	 * @param scale - float
 	 */
 	public void draw(PGraphics g, Gml gml, float scale) {
-		draw(g, gml, scale, Float.MIN_VALUE, Float.MAX_VALUE);
+		draw(g, gml, scale, 0, Float.MAX_VALUE);
 	}
 	
 	/**
@@ -188,7 +188,7 @@ public class GmlBrushManager {
 	 * @param time - float
 	 */
 	public void draw(PGraphics g, Gml gml, float scale, float time) {
-		draw(g, gml, scale, Float.MIN_VALUE, time);
+		draw(g, gml, scale, 0, time);
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class GmlBrushManager {
 	 * @param scale - float
 	 */
 	public void draw(PGraphics g, GmlStroke stroke, float scale) {
-		draw(g, stroke, scale, Float.MIN_VALUE, Float.MAX_VALUE);
+		draw(g, stroke, scale, 0, Float.MAX_VALUE);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class GmlBrushManager {
 	 * @param time - float
 	 */
 	public void draw(PGraphics g, GmlStroke stroke, float scale, float time) {
-		draw(g, stroke, scale, Float.MIN_VALUE, time);
+		draw(g, stroke, scale, 0, time);
 	}
 	
 	/**
@@ -262,7 +262,7 @@ public class GmlBrushManager {
 	 * @param drawer - drawer id
 	 */
 	public void draw(PGraphics g, GmlStroke stroke, float scale, String drawer) {
-		draw(g, stroke, scale, Float.MIN_VALUE, Float.MAX_VALUE, drawer);
+		draw(g, stroke, scale, 0, Float.MAX_VALUE, drawer);
 	}
 
 	/**
@@ -274,7 +274,7 @@ public class GmlBrushManager {
 	 * @param drawer - drawer id
 	 */
 	public void draw(PGraphics g, GmlStroke stroke, float scale, float time, String drawer) {
-		draw(g, stroke, scale, Float.MIN_VALUE, time, drawer);
+		draw(g, stroke, scale, 0, time, drawer);
 	}
 	
 	/**
