@@ -123,7 +123,7 @@ public class GmlBrushManager {
 	
 	/**
 	 * Gets a drawer from its name
-	 * @param name - String
+	 * @param styleId - String
 	 * @return GmlStrokeDrawer
 	 */
 	public GmlStrokeDrawer get(String styleId) {

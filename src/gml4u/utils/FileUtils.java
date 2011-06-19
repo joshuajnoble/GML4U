@@ -17,7 +17,7 @@ public class FileUtils {
 	 * If the regex is badly formatted, empty or null, then the result will not be filtered
 	 * @param folder
 	 * @param regex
-	 * @return
+	 * @return List<String>
 	 */
 	public static List<String> scanFolder(String folder, String regex) {
 		if (null == regex || regex.length() == 0) {
