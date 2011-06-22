@@ -8,6 +8,16 @@ import toxi.geom.Vec3D;
 
 public class CurvesDemo extends GmlStrokeDrawer {
 
+	
+	public static final String ID = "GML4U_STYLE_CURVES0000"; 
+	
+	/**
+	 * CurvesDemo constructor
+	 */
+	public CurvesDemo() {
+		super(ID);
+	}
+
 	public void draw(PGraphics g, GmlStroke stroke, float scale, float minTime, float maxTime) {
 			
 		g.pushStyle();

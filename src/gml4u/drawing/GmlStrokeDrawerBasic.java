@@ -6,6 +6,15 @@ import processing.core.PGraphics;
 
 public abstract class GmlStrokeDrawerBasic extends GmlStrokeDrawer {
 
+	
+	/**
+	 * GmlStrokeDrawerBasic constructor
+	 * @param id - String
+	 */
+	public GmlStrokeDrawerBasic(String id) {
+		super(id);
+	}
+
 	/**
 	 * Called for each point of the stroke with current and previous point information
 	 * Classes extending this class should implement their onw draw(PGraphics, GmlPoint, GmlPoint) method

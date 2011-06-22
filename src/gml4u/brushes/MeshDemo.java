@@ -12,8 +12,17 @@ import toxi.geom.Vec3D;
 import toxi.geom.mesh.Face;
 import toxi.geom.mesh.TriangleMesh;
 
-
 public class MeshDemo extends GmlStrokeDrawer {
+
+	
+	public static final String ID = "GML4U_STYLE_MESH0000"; 
+	
+	/**
+	 * MeshDemo constructor
+	 */
+	public MeshDemo() {
+		super(ID);
+	}
 
 	public void draw(PGraphics g, GmlStroke stroke, float scale, float minTime, float maxTime) {
 

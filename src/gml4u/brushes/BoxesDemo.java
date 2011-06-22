@@ -7,9 +7,16 @@ import processing.core.PGraphics;
 
 public class BoxesDemo extends GmlStrokeDrawer {
 	
-	public void init() {
+
+	public static final String ID = "GML4U_STYLE_BOXES0000"; 
+
+	/**
+	 * BoxesDemo constructor
+	 */
+	public BoxesDemo() {
+		super(ID);
 	}
-	
+
 	public void draw(PGraphics g, GmlStroke stroke, float scale, float minTime, float maxTime) {
 			
 		GmlPoint prev = new GmlPoint();

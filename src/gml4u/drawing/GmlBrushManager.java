@@ -18,53 +18,33 @@ import processing.core.PGraphics;
 public class GmlBrushManager {
 
 	private static final Logger LOGGER = Logger.getLogger(GmlBrushManager.class.getName());
-
-	public final static String BRUSH_DEFAULT 		= "GML4U_STYLE_DEFAULT";
-	public final static String BRUSH_MESH0000 		= "GML4U_STYLE_MESH0000";	
-	public final static String BRUSH_CURVES0000 	= "GML4U_STYLE_CURVES0000";
-	public final static String BRUSH_BOXES0000 		= "GML4U_STYLE_BOXES0000";
+		
+	public static final String BRUSH_DEFAULT = CurvesDemo.ID;
 	
-	
-	// TODO singleton ?
-	//private	static StyleManager styleMgr;
-	private static final String DEFAULT = "DEFAULT";
+	private String defaultId;
 	private Map<String, GmlStrokeDrawer> drawers = new HashMap<String, GmlStrokeDrawer>();
 	
 	/**
-	 * StyleManager constructor
+	 * GmlBrushManager constructor
 	 */
 	public GmlBrushManager() {
 		init();
 	}
-	
-	// TODO Singleton ?
-	/*
-	 * *
-	 * Returns a Style manager Singleton 
-	 * @return StyleManager
-	 *
-	public static StyleManager getInstance() {
-		if (null == styleMgr) {
-			synchronized(StyleManager.class) {
-				if (null == styleMgr) {
-					styleMgr = new StyleManager();
-				}
-			}
-		}
-		return styleMgr;
-	}
-	*/
 	
 	
 	/**
 	 * Init with default styles and sets defaultStyle
 	 */
 	private void init() {
-		drawers.put(DEFAULT, new CurvesDemo());
+
+		GmlStrokeDrawer curve = new CurvesDemo();
+		add(curve);
+		GmlStrokeDrawer mesh = new MeshDemo();
+		add(mesh);
+		GmlStrokeDrawer boxes = new BoxesDemo();
+		add(boxes);
 		
-		drawers.put(BRUSH_MESH0000, new MeshDemo());
-		drawers.put(BRUSH_CURVES0000, new CurvesDemo());
-		drawers.put(BRUSH_BOXES0000, new BoxesDemo());
+		defaultId = curve.getId();
 	}
 	
 	/**
@@ -72,21 +52,20 @@ public class GmlBrushManager {
 	 * @param drawer - GmlStrokeDrawer
 	 */
 	public void setDefault(GmlStrokeDrawer drawer) {
-		if (!drawers.containsValue(drawer)) {
-			drawers.put(DEFAULT, drawer);
-		}
+		add(drawer);
+		setDefault(drawer.getId());
 	}
 	
 	/**
-	 * Sets the default stroke drawer based on his styleID
+	 * Sets the default stroke drawer based on his styleID (if already exists)
 	 * @param styleId - String
 	 */
 	public void setDefault(String styleId) {
 		if (drawers.containsKey(styleId)) {
-			drawers.put(DEFAULT, drawers.get(styleId));
+			defaultId = styleId;
 		}
 		else {
-			LOGGER.warn("Style not found, default brush wasn't changed");
+			LOGGER.warn("Style not found, default style wasn't changed");
 		}
 	}
 
@@ -116,7 +95,7 @@ public class GmlBrushManager {
 	public GmlStrokeDrawer get(int index) {
 		if (null == drawers.get(index)) {
 			LOGGER.warn("Style not found, returning default");
-			return drawers.get(DEFAULT);
+			return drawers.get(defaultId);
 		}
 		return drawers.get(index);
 	}
@@ -129,7 +108,7 @@ public class GmlBrushManager {
 	public GmlStrokeDrawer get(String styleId) {
 		if (null == drawers.get(styleId)) {
 			LOGGER.warn("Style not found, returning default");
-			return drawers.get(DEFAULT);
+			return drawers.get(defaultId);
 		}
 		return drawers.get(styleId);
 	}
@@ -142,28 +121,49 @@ public class GmlBrushManager {
 	public String getID(int index) {
 		if (index < 0 || index > drawers.size()-1) {
 			LOGGER.warn("Drawer not found, returning default");
-			return DEFAULT;
+			return defaultId;
 		}
 		ArrayList<String> keys = new ArrayList<String>();
 		keys.addAll(drawers.keySet());
 		return keys.get(index);
 	}
 	
+	
 	/**
-	 * Adds a new stroke drawer
+	 * Adds a new stroke drawer.
+	 * If another drawer with the same name exists, it will be replaced.
 	 * @param drawer - GmlStrokeDrawer
 	 */
-	public void add(String id, GmlStrokeDrawer drawer) {
-		drawers.put(id, drawer);
+	public void add(GmlStrokeDrawer drawer) {
+		if (null != drawers.get(drawer.getId())) {
+			LOGGER.warn("Replacing existing drawer with the same name: "+ drawer.getId());
+		}
+		drawers.put(drawer.getId(), drawer);		
 	}
 	
 	/**
-	 * Removes a stroke drawer
+	 * Adds a new stroke drawer and changes its ID in the same time
+	 * @param id - String
+	 * @param drawer - GmlStrokeDrawer
+	 */
+	public void add(String id, GmlStrokeDrawer drawer) {
+		drawer.setId(id);
+		add(drawer);
+	}
+	
+	/**
+	 * Removes a stroke drawer based on its id
+	 * If this style is the default one, it won't be removed and you'll need to set another default one
 	 * @param styleId - String
 	 */
 	public void remove(String styleId) {
 		if (drawers.containsKey(styleId)) {
-			drawers.remove(styleId);
+			if (!defaultId.equals(styleId)) {
+				drawers.remove(styleId);
+			}
+			else {
+				LOGGER.warn(styleId + " wasn't removed (currently used as default style)");
+			}
 		}
 		else {
 			LOGGER.warn(styleId + " style wasn't removed (not found)");
@@ -290,7 +290,7 @@ public class GmlBrushManager {
 		
 		if (null == drawers.get(drawer)) {
 			LOGGER.warn("Unknow drawer or no drawer found, using default instead");
-			drawer = DEFAULT;
+			drawer = defaultId;
 		}
 		g.pushStyle();
 		drawers.get(drawer).draw(g, stroke, scale, timeStart, timeEnd);

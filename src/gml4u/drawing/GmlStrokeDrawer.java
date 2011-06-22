@@ -5,6 +5,33 @@ import processing.core.PGraphics;
 
 public abstract class GmlStrokeDrawer {
 	
+	
+	private String id;
+	
+	/**
+	 * GmlStrokeDrawer constructor
+	 * @param id - String
+	 */
+	public GmlStrokeDrawer(String id) {
+		this.id = id;
+	}
+	
+	/**
+	 * Gets the GmlStrokeDrawer ID
+	 * @return id - String
+	 */
+	public String getId() {
+		return id;
+	}
+	
+	/**
+	 * Sets the GmlStrokeDrawer ID
+	 * @param id - String
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	/**
 	 * Draws the stroke by scaling the points using the given scale 
 	 * @param g - PGraphics
