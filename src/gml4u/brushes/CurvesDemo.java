@@ -36,6 +36,11 @@ public class CurvesDemo extends GmlStrokeDrawer {
 	}
 	
 	private static void curveVertex(PGraphics g, Vec3D v) {
-		g.curveVertex(v.x, v.y, v.z);
+		if (g.is3D()) {
+			g.curveVertex(v.x, v.y, v.z);
+		}
+		else {
+			g.curveVertex(v.x, v.y);
+		}
 	}
 }

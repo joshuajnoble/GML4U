@@ -3,6 +3,7 @@ package gml4u.brushes;
 import gml4u.drawing.GmlStrokeDrawer;
 import gml4u.model.GmlPoint;
 import gml4u.model.GmlStroke;
+import processing.core.PApplet;
 import processing.core.PGraphics;
 
 public class BoxesDemo extends GmlStrokeDrawer {
@@ -31,9 +32,17 @@ public class BoxesDemo extends GmlStrokeDrawer {
 			}
 			cur.set(point.scale(scale));
 			g.pushMatrix();
-			g.translate(cur.x, cur.y, cur.z);
-			g.rotate(cur.distanceTo(prev));
-			g.box(cur.distanceTo(prev));
+			if (g.is3D()) {
+				g.translate(cur.x, cur.y, cur.z);
+				g.rotate(cur.distanceTo(prev));
+				g.box(cur.distanceTo(prev));
+			}
+			else {
+				g.translate(cur.x, cur.y, cur.z);
+				g.rotate(cur.distanceTo(prev));
+				g.rectMode(PApplet.CENTER);
+				g.rect(0, 0, cur.distanceTo(prev), cur.distanceTo(prev));
+			}
 			g.popMatrix();
 			prev.set(cur);
 		}

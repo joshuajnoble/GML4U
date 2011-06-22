@@ -40,9 +40,16 @@ public class MeshDemo extends GmlStrokeDrawer {
 		//for(Face f : mesh.faces) {
 		for(Iterator i=mesh.faces.iterator(); i.hasNext();) {
 			Face f=(Face)i.next();
-			g.vertex(f.a.x, f.a.y, f.a.z);
-			g.vertex(f.b.x, f.b.y, f.b.z);
-			g.vertex(f.c.x, f.c.y, f.c.z);
+			if (g.is3D()) {
+				g.vertex(f.a.x, f.a.y, f.a.z);
+				g.vertex(f.b.x, f.b.y, f.b.z);
+				g.vertex(f.c.x, f.c.y, f.c.z);
+			}
+			else {
+				g.vertex(f.a.x, f.a.y);
+				g.vertex(f.b.x, f.b.y);
+				g.vertex(f.c.x, f.c.y);
+			}
 		}
 		g.endShape();
 
