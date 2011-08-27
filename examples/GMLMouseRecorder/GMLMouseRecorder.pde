@@ -1,5 +1,6 @@
 import org.apache.log4j.PropertyConfigurator;
 
+import gml4u.brushes.MeshDemo;
 import gml4u.drawing.GmlBrushManager;
 import gml4u.events.GmlEvent;
 import gml4u.events.GmlParsingEvent;
@@ -45,10 +46,10 @@ void setup() {
 
 
 void draw() {
-  background(0);
+  background(255);
 
-  stroke(255, 30);
-  fill(30, 30);
+  stroke(0, 30);
+  fill(0, 30);
   // Here, we use the strokes handled by the recorder rather than
   // the Gml returned by the recorder because we also want the strokes
   // being drawn
@@ -102,4 +103,3 @@ void mouseDragged() {
 void mouseReleased() {
     recorder.endStroke(0);
 }
-

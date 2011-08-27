@@ -14,11 +14,10 @@
 
 import org.apache.log4j.PropertyConfigurator;
 
-import processing.opengl.*;
-
 import oscP5.*;
 import netP5.*;
 
+import gml4u.brushes.MeshDemo;
 import gml4u.drawing.GmlBrushManager;
 import gml4u.events.GmlEvent;
 import gml4u.events.GmlParsingEvent;
@@ -44,8 +43,8 @@ boolean isRecording;
 
 
 void setup() {
-  size(800, 600, OPENGL);
-  xyRatio = height/width;
+  size(800, 600, P3D);
+  //xyRatio = height/width;
   PropertyConfigurator.configure(sketchPath+"/log4j.properties");
 
   // OSC Client, listening on port 3333
@@ -73,7 +72,7 @@ void setup() {
   
   // Start recording by default
   GmlBrush brush = new GmlBrush();
-  brush.set(GmlBrush.UNIQUE_STYLE_ID, GmlBrushManager.BRUSH_MESH0000);
+  brush.set(GmlBrush.UNIQUE_STYLE_ID, MeshDemo.ID);
   recorder.beginStroke(0, 0, brush);
   isRecording = true;
 
@@ -83,20 +82,15 @@ void setup() {
 
 
 void draw() {
-  background(0);
+  background(255);
 
-  // OpenGL camera & lights
-  camera(screen.x/2, screen.y/3, screen.z*5, screen.x/2, screen.y/2, -screen.z/2, 0, 1, 0);
-  
-  directionalLight(192, 160, 128, 0, -1000, -0.5f);
-  directionalLight(255, 64, 0, 0.5f, -0.1f, 0.5f);
-  lights();
+  stroke(0, 30);
+  fill(0, 30);
 
   /*
   Here, we use the strokes handled by the recorder rather than
   the Gml returned by the recorder because we also want to see the 
-  strokes
-  while we draw them.
+  strokes while we draw them.
   */
   for (GmlStroke gmlStroke : recorder.getStrokes()) { 
 	brushManager.draw(g, gmlStroke, gmlScale);

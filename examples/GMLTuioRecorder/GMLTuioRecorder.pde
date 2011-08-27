@@ -17,6 +17,7 @@ import processing.opengl.*;
 
 import TUIO.*;
 
+import gml4u.brushes.MeshDemo;
 import gml4u.drawing.GmlBrushManager;
 import gml4u.events.GmlEvent;
 import gml4u.events.GmlParsingEvent;
@@ -159,4 +160,3 @@ void removeTuioCursor(TuioCursor tcur) {
 void refresh(TuioTime bundleTime) {
 	// Do nothing
 }
-
