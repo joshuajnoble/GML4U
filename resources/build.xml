@@ -11,9 +11,8 @@
 		at andi@sojamo.de
 -->
     
-	
-
-	<property file="./resources/build.properties" />
+		
+	<property file="./resources/build.properties"/>
 	
 	<description>
         ${ant.description}
@@ -43,6 +42,8 @@
 	<property name="project.dist.version" location="distribution/${project.name}-${project.version}"/>
 	<property name="install.source" location="resources/install_instructions.txt"/>
 	<property name="install.destination" location="${project.dist.version}/INSTALL.txt"/>
+	<property name="library.properties" location="resources/library.properties"/>
+	<!--<property name="library.properties.destination" location="${project.dist.version}/{project.name}/library.properties"/>-->
 	
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
@@ -158,6 +159,16 @@ ${line}
 		<copy todir="${project.tmp}/${project.name}/${folder}">
   			<fileset dir="${project.lib}" excludes="README, core.jar" />
 	  	</copy>
+		<!-- Copy library properties file -->
+		<copy todir="${project.tmp}/${project.name}" file="${library.properties}"/> 
+		<replaceregexp file="${project.tmp}/${project.name}/library.properties"
+		  	                         match="##prettyversion##"
+		  	                         replace="${project.version}"
+		  	                         flags="g" />
+		<replaceregexp file="${project.tmp}/${project.name}/library.properties"
+		  	                         match="##incrementalversion##"
+		  	                         replace="${project.incremental.version}"
+		  	                         flags="g" />
 	</target>
 	
 	
