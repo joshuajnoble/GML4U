@@ -6,7 +6,7 @@ public class GmlConstants {
 
 	// Client
 	public final static String DEFAULT_CLIENT_NAME = "GML4U";
-	public final static String DEFAULT_CLIENT_VERSION = "0.1.0";
+	public final static String DEFAULT_CLIENT_VERSION = "0.1.5";
 	public final static String DEFAULT_CLIENT_KEYWORDS = "GML4U,Processing";
 	
 	// Environment
