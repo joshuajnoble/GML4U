@@ -45,6 +45,7 @@ boolean isRecording;
 
 void setup() {
   size(800, 600, OPENGL);
+  xyRatio = height/width;
   PropertyConfigurator.configure(sketchPath+"/log4j.properties");
 
   // OSC Client, listening on port 3333
@@ -145,7 +146,7 @@ void oscEvent(OscMessage message) {
     if (!isRecording) {
       // Start recording a new stroke
       GmlBrush brush = new GmlBrush();
-      brush.set(GmlBrush.UNIQUE_STYLE_ID, GmlBrushManager.BRUSH_MESH0000);
+      brush.set(GmlBrush.UNIQUE_STYLE_ID, MeshDemo.ID);
       recorder.beginStroke(0, 0, brush);
       isRecording = true;
     }

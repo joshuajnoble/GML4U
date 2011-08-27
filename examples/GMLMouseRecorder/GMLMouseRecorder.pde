@@ -86,7 +86,7 @@ void keyPressed() {
 void mousePressed() {
     // Start recording if not already
     GmlBrush brush = new GmlBrush();
-    brush.set(GmlBrush.UNIQUE_STYLE_ID, GmlBrushManager.BRUSH_CURVES0000);
+    brush.set(GmlBrush.UNIQUE_STYLE_ID, MeshDemo.ID);
     recorder.beginStroke(0, 0, brush);
 }
 

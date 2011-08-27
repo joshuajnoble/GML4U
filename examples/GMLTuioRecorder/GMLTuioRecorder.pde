@@ -119,7 +119,7 @@ void keyPressed() {
 // called when an object is added to the scene
 void addTuioObject(TuioObject tobj) {
   GmlBrush brush = new GmlBrush();
-  brush.set(GmlBrush.UNIQUE_STYLE_ID, GmlBrushManager.BRUSH_MESH0000);
+  brush.set(GmlBrush.UNIQUE_STYLE_ID, MeshDemo.ID);
   recorder.beginStroke(tobj.getSymbolID(), 0, brush);
 }
 
@@ -138,7 +138,7 @@ void removeTuioObject(TuioObject tobj) {
 // called when a cursor is added to the scene
 void addTuioCursor(TuioCursor tcur) {
   GmlBrush brush = new GmlBrush();
-  brush.set(GmlBrush.UNIQUE_STYLE_ID, GmlBrushManager.BRUSH_MESH0000);
+  brush.set(GmlBrush.UNIQUE_STYLE_ID, MeshDemo.ID);
   recorder.beginStroke((int) tcur.getSessionID(), 0, brush);
 }
 
