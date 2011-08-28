@@ -93,8 +93,8 @@ public class GmlMultiSaver extends Thread {
 	}
 
 	/**
-	 * Saves a GML file given its location
-	 * @param location
+	 * Save GML file given a location for each file
+	 * @param locations - Map<String, Gml>
 	 */
 	public void save(Map<String, Gml> gmlLocations) {
 		LOGGER.debug(gmlLocations.size() +" location to be saved");
