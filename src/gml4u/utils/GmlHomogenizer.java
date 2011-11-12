@@ -17,6 +17,7 @@ public class GmlHomogenizer {
 	
 	private static final String CLIENT_GRAFANALYSIS = "Graffiti Analysis";
 	private static final String CLIENT_FATTAG = "Fat Tag";
+	private static final String CLIENT_GML_FIELDREC = "GML Field Recorder";
 	
 	/**
 	 * Fixes the coordinates issues identified in the various Gml recording apps
@@ -85,6 +86,43 @@ public class GmlHomogenizer {
 				stroke.replacePoints(points);
 			}
 			gml.replaceStrokes(strokes);
+		} else if ( CLIENT_GML_FIELDREC.equalsIgnoreCase(client)) {
+			
+			LOGGER.debug("Client " + CLIENT_GML_FIELDREC);
+
+			float minx = 10000, miny = 10000, maxx = -10000, maxy = -10000;
+
+			List<GmlStroke> strokes = (List<GmlStroke>) gml.getStrokes();
+			for (GmlStroke stroke : strokes) {
+				List<GmlPoint> points = stroke.getPoints();
+				for(GmlPoint point: points) {
+
+					if(point.x < maxx) maxx = point.x;
+					if(point.y < maxx) maxy = point.y;
+					if(point.x > minx) minx = point.x;
+					if(point.y > miny) miny = point.y;
+
+				}
+			}
+
+			float yrange = maxy - miny;
+			float xrange = maxx - minx;
+			
+			for (GmlStroke stroke : strokes) {
+				List<GmlPoint> points = stroke.getPoints();
+				for(GmlPoint point: points) {
+
+					point.x -= minx;
+					point.x  /= xrange;
+					point.y -= miny;
+					point.y /= yrange;
+
+				}
+				stroke.replacePoints(points);
+			}
+
+
+
 		}
 	}
 }
