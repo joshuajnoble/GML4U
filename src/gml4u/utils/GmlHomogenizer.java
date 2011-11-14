@@ -97,10 +97,10 @@ public class GmlHomogenizer {
 				List<GmlPoint> points = stroke.getPoints();
 				for(GmlPoint point: points) {
 
-					if(point.x < maxx) maxx = point.x;
-					if(point.y < maxx) maxy = point.y;
-					if(point.x > minx) minx = point.x;
-					if(point.y > miny) miny = point.y;
+					if(point.x > maxx) maxx = point.x;
+					if(point.y > maxy) maxy = point.y;
+					if(point.x < minx) minx = point.x;
+					if(point.y < miny) miny = point.y;
 
 				}
 			}
