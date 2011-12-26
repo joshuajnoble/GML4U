@@ -17,7 +17,7 @@ public class GmlHomogenizer {
 	
 	private static final String CLIENT_GRAFANALYSIS = "Graffiti Analysis";
 	private static final String CLIENT_FATTAG = "Fat Tag";
-	private static final String CLIENT_GML_FIELDREC = "GML Field Recorder";
+	private static final String CLIENT_MTAGGER_FIELD_REC = "mtaggerFieldRec";
 	
 	/**
 	 * Fixes the coordinates issues identified in the various Gml recording apps
@@ -86,10 +86,11 @@ public class GmlHomogenizer {
 				stroke.replacePoints(points);
 			}
 			gml.replaceStrokes(strokes);
-		} else if ( CLIENT_GML_FIELDREC.equalsIgnoreCase(client)) {
+		} else if ( CLIENT_MTAGGER_FIELD_REC.equalsIgnoreCase(client)) {
 			
-			LOGGER.debug("Client " + CLIENT_GML_FIELDREC);
-
+			LOGGER.debug("Client " + CLIENT_MTAGGER_FIELD_REC);
+			// 8 bit processor can't normalize, too much floating point math
+			// so we fix it here
 			float minx = 10000, miny = 10000, maxx = -10000, maxy = -10000;
 
 			List<GmlStroke> strokes = (List<GmlStroke>) gml.getStrokes();

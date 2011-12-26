@@ -46,14 +46,17 @@ public class GmlParsingHelper {
 	 */
 	public static Gml getGml(String file, boolean normalize) {
 
-		LOGGER.debug("Parsing "+ file);
+		LOGGER.warn("Parsing "+ file);
 
 		Gml gml = parseGml(file);
 
+		// Fix differences between the various Gml clients 
+		GmlHomogenizer.autoFix(gml);
+
 		if (normalize) {
+
+			LOGGER.warn("normalize "+ normalize);
 			
-			// Fix differences between the various Gml clients 
-			GmlHomogenizer.autoFix(gml);
 
 			// At this point all Gml points should
 			// be scaled according to the screenBounds
